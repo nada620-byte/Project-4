@@ -70,14 +70,51 @@ private:
     //
     // Purpose:
     // Remove the word while deleting unnecessary nodes
-    bool removeHelper(
-        TrieNode* node,
-        string word,
-        int index
-    ) {
-        // TODO: Implement this function
-        return false;
+    bool removeHelper(TrieNode* node, string word, int index) {
+        if (node == nullptr) {
+            return false;
+        }
+
+        if (index == word.length()) {
+            if (!node->isEndOfWord) {
+                return false;
+            }
+
+            node->isEndOfWord = false;
+
+            for (int i = 0; i < 26; i++) {
+                if (node->children[i] != nullptr) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        int pos = (word[index] - 'a');
+        if (pos < 0 || node->children[pos] == nullptr) {
+            return false;
+        }
+
+    // Recursively remove from child
+    bool shouldDeleteChild = removeHelper(node->children[pos], word, index + 1);
+
+        if (shouldDeleteChild) {
+            node->children[pos] = nullptr;
+        }
+
+    // If current node is not end of any word and has no children, it can be removed too
+    if (!node->isEndOfWord) {
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i] != nullptr) {
+                return false;
+            }
+        }
+        return true;
     }
+
+    return false;
+}
 
 public:
     // Constructor
@@ -132,7 +169,7 @@ public:
         
         return suggestions;
     }
-    
+
     // Remove a word from the Trie
     // Input: word to remove
     // Output: none
@@ -143,7 +180,12 @@ public:
     // Remove: "apple"
     // "app" should still exist
     void remove(string word) {
-        // TODO: Implement this function
+        if (word.empty() || !search(word)) {
+            return;
+        }
+
+        removeHelper(root, word, 0);
+        wordCount--;
     }
     
     // Count the total number of words in the Trie
