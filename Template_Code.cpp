@@ -169,7 +169,24 @@ void insert(string word) {
     // Purpose: Check if the complete word exists in the Trie
     bool search(string word) {
         // TODO: Implement this function
-        return false; // placeholder
+        if (word.empty()) {
+            return false;
+        }
+
+        TrieNode* current = root;
+        for (char ch : word) {
+            if (ch < 'a' || ch > 'z') {
+                return false;
+            }
+
+            int index = ch - 'a';
+
+            if (current->children[index] == nullptr) {
+                return false;
+            }
+            current = current->children[index];
+        }
+        return current != nullptr && current->isEndOfWord;
     }
     
     // Check if any word starts with the given prefix
