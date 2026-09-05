@@ -135,9 +135,33 @@ public:
     // Input: word to insert
     // Output: none
     // Purpose: Add a word to the Trie by creating nodes for each character
-    void insert(string word) {
-        // TODO: Implement this function
+
+void insert(string word) {
+    // Empty string is not considered a stored word
+    if (word.empty()) {
+        return;
     }
+
+    TrieNode* current = root;
+
+    for (char ch : word) {
+        int index = ch - 'a';
+
+        if (current->children[index] == nullptr) {
+            current->children[index] = new TrieNode();
+        }
+
+        current = current->children[index];
+    }
+
+    // Count only newly inserted unique words
+    if (!current->isEndOfWord) {
+        current->isEndOfWord = true;
+        wordCount++;
+    }
+}
+
+
     
     // Search for a word in the Trie
     // Input: word to search for
