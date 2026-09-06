@@ -40,7 +40,24 @@ private:
         vector<string>& results
     ) {
         // TODO: Implement this function
+       
+        if (node->isEndOfWord) 
+        {
+            results.push_back(currentWord);
+        }
+
+        for (int i = 0; i < 26; i++) 
+        {
+
+            if (node->children[i] != nullptr) 
+            {
+
+                findAllWords(node->children[i], currentWord + char('a' + i), results);
+            }
+        }
     }
+
+
 
     // Helper function to delete all nodes recursively
     // Input: current node
@@ -216,6 +233,19 @@ void insert(string word) {
 
         // TODO: Implement this function
 
+        TrieNode* current = root;
+
+        for (char ch : prefix) 
+        {
+            int index = ch - 'a';
+            if (current->children[index] == nullptr) 
+            {
+                return suggestions;
+            }
+            current = current->children[index];
+        }
+
+        findAllWords(current, prefix, suggestions);
         return suggestions;
     }
 
@@ -317,7 +347,24 @@ void insert(string word) {
         vector<string> suggestions;
 
         // TODO: Implement this function
+        TrieNode* current = root;
 
+        for (char ch : prefix)
+        {
+            int index = ch - 'a';
+            if (current->children[index] == nullptr) 
+            {
+                return suggestions;
+            }
+
+            current = current->children[index];
+        }
+        findAllWords(current, prefix, suggestions);
+
+        if (suggestions.size() > limit) 
+        {
+            suggestions.resize(limit);
+        }
         return suggestions;
     }
 };
