@@ -34,27 +34,36 @@ private:
     // Input: current node, current word formed so far, results vector
     // Output: none (modifies results vector by reference)
     // Purpose: Recursively find all complete words starting from the given node
+    // Helper function to find all words from a node
     void findAllWords(
         TrieNode* node,
         string currentWord,
         vector<string>& results
     ) {
-        // TODO: Implement this function
-       
-        if (node->isEndOfWord) 
-        {
+        if (node == nullptr) return;
+        
+        if (node->isEndOfWord) {
             results.push_back(currentWord);
         }
-
-        for (int i = 0; i < 26; i++) 
-        {
-
-            if (node->children[i] != nullptr) 
-            {
-
-                findAllWords(node->children[i], currentWord + char('a' + i), results);
+        
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i] != nullptr) {
+                findAllWords(node->children[i], currentWord + (char)('a' + i), results);
             }
         }
+    }
+
+    // Helper function to count words from a specific node
+    int countWordsFromNode(TrieNode* node) {
+        if (node == nullptr) return 0;
+        
+        int count = node->isEndOfWord ? 1 : 0;
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i] != nullptr) {
+                count += countWordsFromNode(node->children[i]);
+            }
+        }
+        return count;
     }
 
 
@@ -219,34 +228,52 @@ void insert(string word) {
     // Output: boolean indicating if any word has this prefix
     // Purpose: Verify if the prefix exists in the Trie
     //          (doesn't need to be a complete word)
+    // Check if any word starts with the given prefix
     bool startsWith(string prefix) {
-        // TODO: Implement this function
-        return false; // placeholder
-    }
-
-    // Get all words that start with the given prefix
-    // Input: prefix to complete
-    // Output: vector of strings that start with the prefix
-    // Purpose: Find all complete words that begin with the given prefix
-    vector<string> autocomplete(string prefix) {
-        vector<string> suggestions;
-
-        // TODO: Implement this function
-
         TrieNode* current = root;
-
-        for (char ch : prefix) 
-        {
+        for (char ch : prefix) {
             int index = ch - 'a';
-            if (current->children[index] == nullptr) 
-            {
-                return suggestions;
+            if (index < 0 || index >= 26 || current->children[index] == nullptr) {
+                return false;
             }
             current = current->children[index];
         }
+        return true;
+    }
 
+    // Get all words that start with the given prefix
+    vector<string> autocomplete(string prefix) {
+        vector<string> suggestions;
+        TrieNode* current = root;
+        
+        for (char ch : prefix) {
+            int index = ch - 'a';
+            if (index < 0 || index >= 26 || current->children[index] == nullptr) {
+                return suggestions; // Return empty if prefix doesn't exist
+            }
+            current = current->children[index];
+        }
+        
         findAllWords(current, prefix, suggestions);
         return suggestions;
+    }
+
+    // Count the total number of words in the Trie
+    int countWords() {
+        return wordCount;
+    }
+
+    // Count how many words start with a given prefix
+    int countWordsWithPrefix(string prefix) {
+        TrieNode* current = root;
+        for (char ch : prefix) {
+            int index = ch - 'a';
+            if (index < 0 || index >= 26 || current->children[index] == nullptr) {
+                return 0;
+            }
+            current = current->children[index];
+        }
+        return countWordsFromNode(current);
     }
 
     // Remove a word from the Trie
@@ -289,14 +316,53 @@ void insert(string word) {
     // Input: none
     // Output: vector containing all words
     // Purpose: Return every complete word stored in the Trie
+     // Get all words stored in the Trie
     vector<string> getAllWords() {
         vector<string> words;
-
-        // TODO: Implement this function
-
+        // Acceptance Criteria: calls findAllWords(root, "", results)
+        findAllWords(root, "", words);
         return words;
     }
 
+    // Find the longest prefix of a given word that exists in the Trie
+    string longestPrefixOf(string word) {
+        string longest = "";
+        string current = "";
+        TrieNode* current_node = root;
+        
+        for (char ch : word) {
+            int index = ch - 'a';
+            if (index < 0 || index >= 26 || current_node->children[index] == nullptr) {
+                break;
+            }
+            current_node = current_node->children[index];
+            current += ch;
+            longest = current; 
+        }
+        return longest;
+    }
+
+    // Check whether the Trie contains any words
+    bool isEmpty() {
+        // Acceptance Criteria: returns wordCount == 0
+        return wordCount == 0;
+    }
+
+    // Remove all words from the Trie
+    void clear() {
+        // Acceptance Criteria: calls deleteNodes(root), allocates a new root, and sets wordCount = 0
+        deleteNodes(root);
+        root = new TrieNode();
+        wordCount = 0;
+    }
+    // Get autocomplete suggestions with a maximum limit
+    vector<string> autocomplete(string prefix, int limit) {
+        vector<string> suggestions = autocomplete(prefix);
+        if ((int)suggestions.size() > limit) {
+            suggestions.resize(limit);
+        }
+        return suggestions;
+    }
     // Find the longest prefix of a given word that exists in the Trie
     // Input: word
     // Output: longest valid prefix
