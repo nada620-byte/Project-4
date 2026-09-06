@@ -84,14 +84,6 @@ private:
     delete node;
 }
 
-    // Helper function to count words from a specific node
-    // Input: current node
-    // Output: number of complete words below this node
-    // Purpose: Count all words starting from this node
-    int countWordsFromNode(TrieNode* node) {
-        // TODO: Implement this function
-        return 0;
-    }
 
     // Helper function to remove a word recursively
     // Input:
@@ -294,23 +286,6 @@ void insert(string word) {
         wordCount--;
     }
 
-    // Count the total number of words in the Trie
-    // Input: none
-    // Output: number of words
-    // Purpose: Return how many unique complete words exist in the Trie
-    int countWords() {
-        // TODO: Implement this function
-        return 0;
-    }
-
-    // Count how many words start with a given prefix
-    // Input: prefix
-    // Output: number of words
-    // Purpose: Count all complete words that begin with the prefix
-    int countWordsWithPrefix(string prefix) {
-        // TODO: Implement this function
-        return 0;
-    }
 
     // Get all words stored in the Trie
     // Input: none
