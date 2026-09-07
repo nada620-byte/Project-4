@@ -41,19 +41,11 @@ private:
         vector<string>& results
     ) {
         if (node == nullptr) return;
-<<<<<<< Updated upstream
-        
-        if (node->isEndOfWord) {
-            results.push_back(currentWord);
-        }
-        
-=======
 
         if (node->isEndOfWord) {
             results.push_back(currentWord);
         }
 
->>>>>>> Stashed changes
         for (int i = 0; i < 26; i++) {
             if (node->children[i] != nullptr) {
                 findAllWords(node->children[i], currentWord + (char)('a' + i), results);
@@ -64,11 +56,7 @@ private:
     // Helper function to count words from a specific node
     int countWordsFromNode(TrieNode* node) {
         if (node == nullptr) return 0;
-<<<<<<< Updated upstream
-        
-=======
 
->>>>>>> Stashed changes
         int count = node->isEndOfWord ? 1 : 0;
         for (int i = 0; i < 26; i++) {
             if (node->children[i] != nullptr) {
@@ -246,11 +234,7 @@ void insert(string word) {
     vector<string> autocomplete(string prefix) {
         vector<string> suggestions;
         TrieNode* current = root;
-<<<<<<< Updated upstream
-        
-=======
 
->>>>>>> Stashed changes
         for (char ch : prefix) {
             int index = ch - 'a';
             if (index < 0 || index >= 26 || current->children[index] == nullptr) {
@@ -258,11 +242,7 @@ void insert(string word) {
             }
             current = current->children[index];
         }
-<<<<<<< Updated upstream
-        
-=======
 
->>>>>>> Stashed changes
         findAllWords(current, prefix, suggestions);
         return suggestions;
     }
@@ -317,58 +297,6 @@ void insert(string word) {
     }
 
     // Find the longest prefix of a given word that exists in the Trie
-<<<<<<< Updated upstream
-    string longestPrefixOf(string word) {
-        string longest = "";
-        string current = "";
-        TrieNode* current_node = root;
-        
-        for (char ch : word) {
-            int index = ch - 'a';
-            if (index < 0 || index >= 26 || current_node->children[index] == nullptr) {
-                break;
-            }
-            current_node = current_node->children[index];
-            current += ch;
-            longest = current; 
-        }
-        return longest;
-    }
-
-    // Check whether the Trie contains any words
-    bool isEmpty() {
-        // Acceptance Criteria: returns wordCount == 0
-        return wordCount == 0;
-    }
-
-    // Remove all words from the Trie
-    void clear() {
-        // Acceptance Criteria: calls deleteNodes(root), allocates a new root, and sets wordCount = 0
-        deleteNodes(root);
-        root = new TrieNode();
-        wordCount = 0;
-    }
-    // Get autocomplete suggestions with a maximum limit
-    vector<string> autocomplete(string prefix, int limit) {
-        vector<string> suggestions = autocomplete(prefix);
-        if ((int)suggestions.size() > limit) {
-            suggestions.resize(limit);
-        }
-        return suggestions;
-    }
-    // Find the longest prefix of a given word that exists in the Trie
-    // Input: word
-    // Output: longest valid prefix
-    //
-    // Example:
-    // Trie contains:
-    // "apple"
-    // "application"
-    //
-    // Input: "appreciate"
-    // Output: "app"
-=======
->>>>>>> Stashed changes
     string longestPrefixOf(string word) {
         string longest = "";
         string current = "";
@@ -401,30 +329,8 @@ void insert(string word) {
     }
     // Get autocomplete suggestions with a maximum limit
     vector<string> autocomplete(string prefix, int limit) {
-<<<<<<< Updated upstream
-        vector<string> suggestions;
-
-        // TODO: Implement this function
-        TrieNode* current = root;
-
-        for (char ch : prefix)
-        {
-            int index = ch - 'a';
-            if (current->children[index] == nullptr) 
-            {
-                return suggestions;
-            }
-
-            current = current->children[index];
-        }
-        findAllWords(current, prefix, suggestions);
-
-        if (suggestions.size() > limit) 
-        {
-=======
         vector<string> suggestions = autocomplete(prefix);
         if ((int)suggestions.size() > limit) {
->>>>>>> Stashed changes
             suggestions.resize(limit);
         }
         return suggestions;
